@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="text-align: center;margin-top: 150px;">
+    <div id="opacity">请开始你的输入：</div>
+    <input id="o-value">
+</div>
+
+<script>
+    let date = {
+        status: true
+    }
+
+    // 监听数据（对象）的属性变化，变化后就操作DOM
+    Object.defineProperty(date, 'opName', {
+        get: function () {
+            return document.getElementById('opacity').innerHTML;
+        },
+        set: function (para) {
+            document.getElementById('opacity').innerHTML = para;
+        }
+    });
+
+    // 监听input的输入，有输入就改变数据（上面对象date）
+    document.getElementById("o-value").addEventListener("input", function () {
+        if (date.satus) {
+            date.opName = document.getElementById('o-value').value;
+        }
+    });
+
+    // 监听拼写拼音开始
+    document.getElementById("o-value").addEventListener("compositionstart", function () {
+        date.satus = false;
+    });
+
+    // 监听拼写拼音结束
+    document.getElementById("o-value").addEventListener("compositionend", function () {
+        date.satus = true;
+        date.opName = document.getElementById('o-value').value;
+    });
+
+</script>
+</body>
+</html>
