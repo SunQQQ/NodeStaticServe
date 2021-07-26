@@ -12,34 +12,38 @@
 
 <script>
     let date = {
-        status: true
+        status: true,
+        opName:''
     }
 
     // 监听数据（对象）的属性变化，变化后就操作DOM
     Object.defineProperty(date, 'opName', {
         get: function () {
-            return document.getElementById('opacity').innerHTML;
+            // return document.getElementById('opacity').innerHTML;
         },
         set: function (para) {
             document.getElementById('opacity').innerHTML = para;
         }
     });
 
+    // 监听拼写拼音开始
+    document.getElementById("o-value").addEventListener("compositionstart", function () {
+        console.log('拼音开始');
+        date.status = false;
+    });
+
     // 监听input的输入，有输入就改变数据（上面对象date）
     document.getElementById("o-value").addEventListener("input", function () {
-        if (date.satus) {
+        console.log('触发input 监听');
+        if (date.status) {
             date.opName = document.getElementById('o-value').value;
         }
     });
 
-    // 监听拼写拼音开始
-    document.getElementById("o-value").addEventListener("compositionstart", function () {
-        date.satus = false;
-    });
-
     // 监听拼写拼音结束
     document.getElementById("o-value").addEventListener("compositionend", function () {
-        date.satus = true;
+        date.status = true;
+        console.log('拼音结束');
         date.opName = document.getElementById('o-value').value;
     });
 
