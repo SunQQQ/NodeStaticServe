@@ -12,10 +12,10 @@ var path = require('path');
 let server = http.createServer((req, res) => {
 
     // 通过你在浏览器输入的网站，利用url.parse进行解析成一个对象，再读取其中pathname的属性
-// 例如你输入http://localhost:8080/index.html，然后url.parse(req.url).pathname返回的值为 "/index.html"
+    // 例如你输入http://localhost:8080/index.html，然后url.parse(req.url).pathname返回的值为 "/index.html"
     var pathname = url.parse(req.url).pathname;
     var ext = path.parse(pathname).ext;
-// 获取后缀对应的 MIME 类型
+    // 获取后缀对应的 MIME 类型
     var mimeType = mime.getType(ext);
 
     // fs，文件系统，读取文件
