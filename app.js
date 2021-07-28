@@ -7,38 +7,60 @@ let util = require('util');
 let fs = require('fs');
 var mime = require('mime');
 var path = require('path');
+var axios = require('axios');
+var querystring = require('querystring');
 
 // http库是node提供的api，可以直接上node的中文网，直接看到各种api
 let server = http.createServer((req, res) => {
-
-    // 通过你在浏览器输入的网站，利用url.parse进行解析成一个对象，再读取其中pathname的属性
-    // 例如你输入http://localhost:8080/index.html，然后url.parse(req.url).pathname返回的值为 "/index.html"
     var pathname = url.parse(req.url).pathname;
-    var ext = path.parse(pathname).ext;
-    // 获取后缀对应的 MIME 类型
-    var mimeType = mime.getType(ext);
+    var UrlType = pathname.split('/');    //辨别请求是不是ajax，本应用ajax请求都有aqi标记，具体使用时需要根据情况修改此处
 
-    // fs，文件系统，读取文件
-    fs.readFile(pathname.substring(1), (err, data) => {
-        if (err) {
-            // 错误就返回404状态码
-            res.writeHead(404, {
-                'Content-Type': mimeType
-            })
+    if (UrlType[1] == 'api') {
+        var post = '';
+        // 通过req的data事件监听函数，每当接受到请求体的数据，就累加到post变量中
+        req.on('data', function(chunk){
+            post += chunk;
+        });
 
-        } else {
-            // 成功读取文件
-            res.writeHead(200, {
-                'Content-Type': mimeType
-            })
-            // 展示文件数据
-            res.write(data.toString());
-        }
-        // 注意，这个end 一定要放在读取文件的内部使用
-        res.end();
-    })
+        req.on('end', function(){
+
+        });
+
+        axios.post(
+            pathname.replace(/\/api/, 'http://39.104.22.73:8888'),
+            {Skip: 0, Limit: 8}
+        ).then(function (response) {
+            console.log('response');
+            console.log(response);
+        }).catch(function (e) {
+            console.log('ajax error');
+            console.log(e);
+        });
+
+    } else {
+        var ext = path.parse(pathname).ext;
+        // 获取后缀对应的 MIME 类型
+        var mimeType = mime.getType(ext);
+
+        // fs，文件系统，读取文件
+        fs.readFile(pathname.substring(1), (err, data) => {
+            if (err) {
+                // 错误就返回404状态码
+                res.writeHead(404, {
+                    'Content-Type': mimeType
+                })
+            } else {
+                // 成功读取文件
+                res.writeHead(200, {
+                    'Content-Type': mimeType
+                })
+                // 展示文件数据
+                res.write(data.toString());
+            }
+            // 注意，这个end 一定要放在读取文件的内部使用
+            res.end();
+        })
+    }
 })
 
-server.listen(3000, '127.0.0.1', () => {
-    console.log('服务器已经运行，请打开浏览器，输入：http://127.0.0.1:3000/test1.html来访问')
-})
+server.listen(67);
