@@ -12,8 +12,9 @@ var querystring = require('querystring');
 
 // http库是node提供的api，可以直接上node的中文网，直接看到各种api
 let server = http.createServer((req, res) => {
-    var pathname = url.parse(req.url).pathname;
-    var UrlType = pathname.split('/');    //辨别请求是不是ajax，本应用ajax请求都有aqi标记，具体使用时需要根据情况修改此处
+    var pathname = url.parse(req.url).pathname,
+        UrlType = pathname.split('/'),    //辨别请求是不是ajax，本应用ajax请求都有aqi标记，具体使用时需要根据情况修改此处
+        ProxyedUrl = pathname.replace(/\/api/, 'http://39.104.22.73:8888');  //指向后后的url
 
     if (UrlType[1] == 'api') {
         var post = '';
@@ -23,20 +24,16 @@ let server = http.createServer((req, res) => {
         });
 
         req.on('end', function(){
-
+            axios.post(
+                pathname.replace(/\/api/, 'http://39.104.22.73:8888'),
+                JSON.parse(post)
+            ).then(function (response) {
+                res.end(JSON.stringify(response.data));
+            }).catch(function (e) {
+                console.log('ajax error');
+                // console.log(e);
+            });
         });
-
-        axios.post(
-            pathname.replace(/\/api/, 'http://39.104.22.73:8888'),
-            {Skip: 0, Limit: 8}
-        ).then(function (response) {
-            console.log('response');
-            console.log(response);
-        }).catch(function (e) {
-            console.log('ajax error');
-            console.log(e);
-        });
-
     } else {
         var ext = path.parse(pathname).ext;
         // 获取后缀对应的 MIME 类型
