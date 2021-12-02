@@ -1,6 +1,6 @@
-以前在本地打开静态网页时，总是安装一套wamp，后来学习了node发现可以更方便
+以前需用静态服务器时总是安装一个apache，然后配置一波贼麻烦，后来学习了node发现原来可以更方便！
 
-app.js就是用node启的一个http服务，可以通过前端请求地址，node返回html文件。也可以前端请求axios，这个服务来转发。达到这虽然是个静态服务，但是也可以通过转发来完成ajax请求。
+app.js就是用node启的一个http服务，可以通过前端的地址请求，node返回html文件。也可以前端请求axios，这个服务来转发。达到一个可以加载静态资源，也可以实现ajax请求的简单的静态服务器。
 
-serve.js也是达到跟app.js一样的目的，即做一个静态服务器。但是因为app.js我用在了我的博客上，需要考虑使用GZIP功能，原生node没法使用。我把app.js用express框架改造了一下，
-用express框架加载compress组件实现了对GZIP的支持。
+serve.js也是达到跟app.js一样的目的，即做一个静态服务器。但是因为app.js我用在了我的博客上，后来需要考虑使用GZIP功能，原生node没法使用。我把app.js用express框架改造了一下，
+用express框架加载compress组件实现了对GZIP的支持。也算是对app.js的升级，特意两个文件都保留以做对比。
